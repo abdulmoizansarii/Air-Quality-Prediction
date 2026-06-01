@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Air Quality Prediction System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        /* Modern Dark Cyberpunk Aesthetic */
+        body { 
+            background-color: #0b0f19; 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            color: #e2e8f0;
+            padding-top: 30px;
+            padding-bottom: 50px;
+        }
+
+        /* Glassmorphism Dashboard Container */
+        .card { 
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); 
+        }
+
+        /* Premium Textured Neon Banner */
+        .header-banner { 
+            background: linear-gradient(135deg, #1e1b4b, #0f172a); 
+            color: #f8fafc; 
+            border-radius: 20px 20px 0 0; 
+            padding: 35px 25px; 
+            text-align: center; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .header-banner h2 {
+            font-size: 1.85rem;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+        }
+
+        /* Input Cards and Typography */
+        h5.section-title {
+            color: #38bdf8 !important;
+            letter-spacing: 1px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.2) !important;
+        }
+
+        .form-label {
+            color: #94a3b8;
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+        }
+
+        /* Glowing Dark Input Controls */
+        .form-control {
+            background-color: rgba(15, 23, 42, 0.6) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            color: #ffffff !important;
+            border-radius: 10px;
+            padding: 11px 14px;
+            transition: all 0.25s ease;
+        }
+
+        .form-control:focus {
+            border-color: #38bdf8 !important;
+            background-color: #0f172a !important;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.25) !important;
+        }
+
+        .form-control::placeholder {
+            color: #475569 !important;
+            font-size: 0.85rem;
+        }
+
+        /* High-Impact Diagnostic Trigger */
+        .btn-diagnostic { 
+            background: linear-gradient(135deg, #0ea5e9, #2563eb); 
+            border: none; 
+            color: white;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-diagnostic:hover { 
+            background: linear-gradient(135deg, #38bdf8, #3b82f6); 
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.5);
+        }
+
+        /* Diagnostic Response Output Panels */
+        .alert-display {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 14px;
+            color: #ffffff;
+        }
+        
+        /* Custom Bootstrap Badge Overrides for Dark Mode Ambient Visibility */
+        .text-bg-success { background-color: #065f46 !important; color: #34d399 !important; border: 1px solid #059669; }
+        .text-bg-warning { background-color: #78350f !important; color: #fbbf24 !important; border: 1px solid #d97706; }
+        .text-bg-danger { background-color: #991b1b !important; color: #fca5a5 !important; border: 1px solid #dc2626; }
+
+    </style>
+</head>
+<body>
+    <div class="container my-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow-lg">
+                    
+                    <div class="header-banner">
+                        <h2 class="fw-bold mb-2">⚡ Smart Air Quality Diagnostics</h2>
+                        <p class="mb-0 text-secondary" style="color: #94a3b8 !important;">Environmental telemetry processing & neural network carbon concentration engine.</p>
+                    </div>
+
+                    <div class="card-body p-4 p-md-5">
+
+                        {% if prediction_text %}
+                        <div class="alert-display p-4 mb-5 text-center shadow-sm animate-fade-in">
+                            <span class="text-uppercase font-monospace tracking-wider text-secondary small d-block mb-1" style="color: #64748b !important;">Telemetry Engine Evaluation</span>
+                            <h3 class="fw-bold text-white mb-3">{{ prediction_text }}</h3>
+                            <div class="d-flex justify-content-center align-items-center gap-2 pt-2 border-top border-secondary" style="border-color: rgba(255,255,255,0.05) !important;">
+                                <span class="fw-medium text-muted small">System Classification:</span> 
+                                <span class="badge px-3 py-2 fs-6 rounded-pill {{ status_class }}">{{ air_status }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <form action="/predict" method="POST">
+                            
+                            <h5 class="section-title pb-2 mb-4 fw-bold">🔬 Electrochemical Core Sensors</h5>
+                            <div class="row g-4 mb-5">
+                                <div class="col-md-4">
+                                    <label class="form-label font-monospace">PT08.S1 (CO Target)</label>
+                                    <input type="number" step="any" name="pt08_s1" class="form-control" placeholder="Sensor response (e.g. 1100)" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-monospace">NMHC (Ground Truth)</label>
+                                    <input type="number" step="any" name="nmhc" class="form-control" placeholder="True NMHC (e.g. 218)" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-monospace">C6H6 (Benzene GT)</label>
+                                    <input type="number" step="any" name="c6h6" class="form-control" placeholder="True C6H6 (e.g. 10)" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-monospace">PT08.S2 (Hydrocarbons)</label>
+                                    <input type="number" step="any" name="pt08_s2" class="form-control" placeholder="Sensor response (e.g. 940)" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-monospace">NOx (Nitrogen Oxides)</label>
+                                    <input type="number" step="any" name="nox" class="form-control" placeholder="True NOx (e.g. 246)" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-monospace">PT08.S3 (NOx Sensor)</label>
+                                    <input type="number" step="any" name="pt08_s3" class="form-control" placeholder="Sensor response (e.g. 835)" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-monospace">NO2 (Nitrogen Dioxide)</label>
+                                    <input type="number" step="any" name="no2" class="form-control" placeholder="True NO2 (e.g. 113)" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-monospace">PT08.S4 (NO2 Sensor)</label>
+                                    <input type="number" step="any" name="pt08_s4" class="form-control" placeholder="Sensor response (e.g. 1456)" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label font-monospace">PT08.S5 (Ozone Engine)</label>
+                                    <input type="number" step="any" name="pt08_s5" class="form-control" placeholder="Sensor response (e.g. 1022)" required>
+                                </div>
+                            </div>
+
+                            <h5 class="section-title pb-2 mb-4 fw-bold">☀️ Atmospheric & Spatiotemporal Vector</h5>
+                            <div class="row g-4 mb-5">
+                                <div class="col-md-4">
+                                    <label class="form-label">Ambient Temperature (°C)</label>
+                                    <input type="number" step="any" name="t" class="form-control" placeholder="Degrees Celsius (e.g. 18.3)" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Relative Humidity (%)</label>
+                                    <input type="number" step="any" name="rh" class="form-control" placeholder="Percentage (e.g. 49.2)" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Absolute Humidity (AH)</label>
+                                    <input type="number" step="any" name="ah" class="form-control" placeholder="Grams/m³ (e.g. 1.02)" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Hour Metrics (0 - 23)</label>
+                                    <input type="number" min="0" max="23" name="hour" class="form-control" placeholder="Hourly integer" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Calendar Month (1 - 12)</label>
+                                    <input type="number" min="1" max="12" name="month" class="form-control" placeholder="Month index" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Day of Week Temporal Array (0-6)</label>
+                                    <input type="number" min="0" max="6" name="dayofweek" class="form-control" placeholder="0=Mon, 6=Sun" required>
+                                </div>
+                            </div>
+
+                            <div class="text-center pt-2">
+                                <button type="submit" class="btn btn-diagnostic btn-lg w-100 w-md-50 fw-bold shadow-sm">
+                                    ⚡ Compute Predictive Array Metrics
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
